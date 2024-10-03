@@ -11,10 +11,17 @@ import Zindex from "./Zindex";
 import Float from "./Float";
 import Flex from "./Flex";
 import Gridlayout from "./Gridlayout";
+import ReactIconsSampler from "./ReactIcons";
+import BootstrapGrid from "./BootstrapGrid";
+import ScreenSizeLabel from "./ScreenSizeLabel";
+import BootstrapTables from "./BootstrapTables";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapNavigation from "./BootstrapNavigation";
 
 export default function Lab2() {
   return (
-    <div id="wd-lab2">
+    <div className="container">
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
       <p>
@@ -75,6 +82,13 @@ This heading has same style as paragraph above
 <Float />
 <Flex />
 <Gridlayout />
+<ReactIconsSampler />
+<BootstrapGrid />
+<ScreenSizeLabel />
+<BootstrapTables />
+<BootstrapLists />
+<BootstrapForms />
+<BootstrapNavigation />
     </div>
   );
 }
