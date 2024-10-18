@@ -1,13 +1,18 @@
 import AssignmentControls from "./AssignmentControls";
+import GreenCheckmark from "./GreenCheckMark";
 import { BsGripVertical } from "react-icons/bs";
 import { RxTriangleDown } from "react-icons/rx";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { LuNewspaper } from "react-icons/lu";
 import "./style.css";
-import GreenCheckmark from "./GreenCheckMark";
+import { Link, useParams} from "react-router-dom";
+import * as db from "../../Database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = db.assignments;
+
     return (
       <div id="wd-assignments">
         <AssignmentControls/> <br/> <br/> <br/><br/>
@@ -22,83 +27,32 @@ export default function Assignments() {
           <span className="float-end border rounded-pill ps-3 pe-3 me-2">40% of Total</span>
           </div>
           </li>
-
+          {assignments
+          .filter((assignment: any) => assignment.course === cid)
+          .map((assignment: any) => (
           <li className="wd-assignment-list-item d-flex align-items-center green-left-border">
             <div className="me-3">
               <BsGripVertical className="me-2 fs-3" />
               <LuNewspaper className="fs-5" />
             </div>
             <div className="flex-grow-1">
-              <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123"
-              style={{ color: 'black', 
-                textDecoration: 'none'
-              }} >
-                <strong>A1</strong>
-              </a>
+              <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} className="text-decoration-none text-black">
+                <strong>{assignment.title}</strong>
+              </Link>
               <ul className="list-unstyled mb-0">
                 <li>
-                  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am
+                  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> {assignment.available}
                 </li>
-                <li><strong>Due</strong> May 13 at 11:59pm | 100 pts</li>
+                <li><strong>Due</strong> {assignment.due} | {assignment.points} pts</li>
               </ul>
             </div>
             <div className="float-end">
               <GreenCheckmark />
               <IoEllipsisVertical className="fs-4" />
-            </div>
+            </div> 
           </li>
-
-          <li className="wd-assignment-list-item d-flex align-items-center green-left-border ">
-            <div className="me-3">
-              <BsGripVertical className="me-2 fs-3" />
-              <LuNewspaper className="fs-5" />
-            </div>
-            <div className="flex-grow-1">
-              <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123"
-              style={{ color: 'black', 
-                textDecoration: 'none'
-              }} >
-              
-                <strong>A2</strong>
-              </a>
-              <ul className="list-unstyled mb-0">
-                <li>
-                  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 13 at 12:00am
-                </li>
-                <li><strong>Due</strong> May 20 at 11:59pm | 100 pts</li>
-              </ul>
-            </div>
-            <div className="float-end">
-              <GreenCheckmark/>
-              <IoEllipsisVertical className="fs-4" />
-            </div>
-          </li>
-
-          <li className="wd-assignment-list-item d-flex align-items-center green-left-border ">
-            <div className="me-3">
-              <BsGripVertical className="me-2 fs-3" />
-              <LuNewspaper className="fs-5" />
-            </div>
-            <div className="flex-grow-1">
-              <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123"
-              style={{ color: 'black', 
-                textDecoration: 'none'
-              }} >
-                <strong>A3</strong>
-              </a>
-              <ul className="list-unstyled mb-0">
-                <li>
-                  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 13 at 12:00am
-                </li>
-                <li><strong>Due</strong> May 27 at 11:59pm | 100 pts</li>
-              </ul>
-            </div>
-            <div className="float-end">
-              <GreenCheckmark />
-              <IoEllipsisVertical className="fs-4" />
-            </div>
-          </li>
+          ))}
         </ul>
       </div>
-  );}
-  
+    );
+}

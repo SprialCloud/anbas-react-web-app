@@ -1,10 +1,15 @@
-import { IoIosArrowDown } from "react-icons/io";
+import {assignments} from "../../Database";
+import {Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 
 export default function AssignmentEditor() {
+    const {cid, aid} = useParams();
+    const assignment = assignments.find((assignment: any) => assignment._id === aid);
+  
     return (
       <div id="wd-assignments-editor">
+        
         <label htmlFor="wd-name"><strong>Assignment Name</strong></label> 
-        <input id="wd-name" value="A1" className="form-control mb-2 border " style={{ maxWidth: '1000px' }}/>
+        <input id="wd-name" value={assignment?._id} className="form-control mb-2 border " style={{ maxWidth: '1000px' }}/>
         <textarea id="wd-description" cols  = {60} rows = {10} className="form-control mb-2" style={{ maxWidth: '1000px' }}
         value ={`\n The assignment is available online. \n\n Submit a link to the landing page of your Web application running on Netlify.\n\n The landing page should include the following: \n\n   •  Your full name and section \n   •  Links to each of the lab assignments \n   •  Link to the Kanas application \n   •  Links to all relevant source code repositories \n\n The Kanas application should include a link to navigate back to the landing page.`}>
         
@@ -14,7 +19,7 @@ export default function AssignmentEditor() {
             <label htmlFor="r1" className="col-sm-2 col-form-label text-end">
                 Points </label>
             <div className="col-sm-10">
-                <input  className="form-control" placeholder = "100" id="r1" style={{ maxWidth: '400px' }}  />
+                <input  className="form-control" placeholder = {assignment?.points} id="r1" style={{ maxWidth: '400px' }}  />
             </div> </div>
         
         <div className="row mb-3">
@@ -132,10 +137,10 @@ export default function AssignmentEditor() {
                 <strong>Due</strong>
               </label>
               <input
-                type="datetime-local"
+                type="datetime"
                 id="wd-due-date"
                 className="form-control"
-                value="2024-05-13T23:59"
+                value={assignment?.due}
               />
             </div>
 
@@ -145,10 +150,10 @@ export default function AssignmentEditor() {
                 <strong>Available from</strong>
                 </label>
                 <input
-                  type="datetime-local"
+                  type="datetime"
                   id="wd-available-from"
                   className="form-control"
-                  placeholder="mm/dd/yyyy --:--"
+                  placeholder={assignment?.available}
                 />
               </div>
               <div className="col-md-6">
@@ -156,10 +161,10 @@ export default function AssignmentEditor() {
                 <strong>Until</strong>
                 </label>
                 <input
-                  type="datetime-local"
+                  type="datetime"
                   id="wd-until"
                   className="form-control"
-                  placeholder="mm/dd/yyyy --:--"
+                  placeholder={assignment?.due}
                 />
               </div>
             </div>
@@ -169,10 +174,13 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="d-flex justify-content-end">
+      <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
         <button className="btn btn-secondary me-2">Cancel</button>
+      </Link>
+      <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
         <button className="btn btn-danger">Save</button>
+      </Link>
       </div>
-        
       </div>
   );}
   
