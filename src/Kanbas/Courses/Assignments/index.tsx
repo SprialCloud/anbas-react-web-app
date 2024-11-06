@@ -8,7 +8,6 @@ import { LuNewspaper } from "react-icons/lu";
 import { FaTrash } from "react-icons/fa6";
 import "./style.css";
 import { Link, useParams} from "react-router-dom";
-import * as db from "../../Database";
 import { deleteAssignment }
   from "./reducer";
 import { useSelector, useDispatch } from "react-redux";

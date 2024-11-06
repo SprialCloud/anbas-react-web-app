@@ -11,7 +11,7 @@ export default function AssignmentEditor() {
     const [title, setTitle] = useState(assignment?.title || 'New Assignment');
     const [description, setDescription] = useState(assignment?.description || 'Add a description...');
     const [points, setPoints] = useState(assignment?.points || '100'); 
-    const [available, setAvailable] = useState(assignment?.available || new Date().toISOString().slice(0, 16)); // Current date and time as default
+    const [available, setAvailable] = useState(assignment?.available || new Date().toISOString().slice(0, 16)); 
     const [due, setDue] = useState(assignment?.due || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16));
     const cancelEdit = () => navigate(`/Kanbas/Courses/${cid}/Assignments`);
 
@@ -199,7 +199,6 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="d-flex justify-content-end">
-      
         <button className="btn btn-secondary me-2" onClick={cancelEdit}>Cancel</button>
         <ProtectedButton>
         <button className="btn btn-danger" onClick={saveEdit}>Save</button>

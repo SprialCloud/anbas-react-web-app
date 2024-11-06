@@ -17,6 +17,7 @@ const assignmentsSlice = createSlice({
         points: assignment.points,
         due: assignment.due,
         available: assignment.available,
+        course: assignment.course,
       };
       state.assignments.push(newAssignment);
     },
