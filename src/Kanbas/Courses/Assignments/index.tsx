@@ -5,14 +5,22 @@ import { RxTriangleDown } from "react-icons/rx";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { LuNewspaper } from "react-icons/lu";
+import { FaTrash } from "react-icons/fa6";
 import "./style.css";
 import { Link, useParams} from "react-router-dom";
 import * as db from "../../Database";
+import { deleteAssignment }
+  from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import ProtectedButton from "../../Account/ProtectedButton";
+
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
-
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  
     return (
       <div id="wd-assignments">
         <AssignmentControls/> <br/> <br/> <br/><br/>
@@ -49,10 +57,26 @@ export default function Assignments() {
             <div className="float-end">
               <GreenCheckmark />
               <IoEllipsisVertical className="fs-4" />
+
+              {currentUser?.role === 'FACULTY' && (
+                  <ProtectedButton>
+                    <button
+                      className="btn btn-danger ms-2"
+                      onClick={() => {
+                        if (window.confirm("Are you sure you want to delete this assignment?")) {
+                          dispatch(deleteAssignment(assignment._id));
+                        }
+                      }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </ProtectedButton>
+                )}
+
             </div> 
           </li>
           ))}
-        </ul>
+        </ul> 
       </div>
     );
 }

@@ -1,25 +1,47 @@
-import {assignments} from "../../Database";
-import {Link, Navigate, Route, Routes, useParams } from "react-router-dom";
-
+import {Link,  useParams, useNavigate} from "react-router-dom";
+import { addAssignment, editAssignment } from "./reducer";
+import { useDispatch, useSelector} from "react-redux";
+import { useState } from "react";
+import ProtectedButton from "../../Account/ProtectedButton";
 export default function AssignmentEditor() {
     const {cid, aid} = useParams();
-    const assignment = assignments.find((assignment: any) => assignment._id === aid);
-  
+    const assignment = useSelector((state: any) => state.assignmentReducer.assignments.find((a: any) => a.course ===cid &&a._id === aid));
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [title, setTitle] = useState(assignment?.title || 'New Assignment');
+    const [description, setDescription] = useState(assignment?.description || 'Add a description...');
+    const [points, setPoints] = useState(assignment?.points || '100'); 
+    const [available, setAvailable] = useState(assignment?.available || new Date().toISOString().slice(0, 16)); // Current date and time as default
+    const [due, setDue] = useState(assignment?.due || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16));
+    const cancelEdit = () => navigate(`/Kanbas/Courses/${cid}/Assignments`);
+
+    const saveEdit = () => {
+        const updatedAssignment = {
+            _id: assignment?._id || new Date().getTime().toString(),
+            course: cid,
+            title,
+            description,
+            points,
+            available,
+            due,
+        };
+        dispatch(assignment ? editAssignment(updatedAssignment) : addAssignment(updatedAssignment));
+        cancelEdit();
+    };
+
     return (
       <div id="wd-assignments-editor">
-        
         <label htmlFor="wd-name"><strong>Assignment Name</strong></label> 
-        <input id="wd-name" value={assignment?._id} className="form-control mb-2 border " style={{ maxWidth: '1000px' }}/>
+        <input id="wd-name" value={title} onChange = {(e) => setTitle(e.target.value)} className="form-control mb-2 border " style={{ maxWidth: '1000px' }}/>
         <textarea id="wd-description" cols  = {60} rows = {10} className="form-control mb-2" style={{ maxWidth: '1000px' }}
-        value ={`\n The assignment is available online. \n\n Submit a link to the landing page of your Web application running on Netlify.\n\n The landing page should include the following: \n\n   •  Your full name and section \n   •  Links to each of the lab assignments \n   •  Link to the Kanas application \n   •  Links to all relevant source code repositories \n\n The Kanas application should include a link to navigate back to the landing page.`}>
-        
+        value={description} onChange = {(e) => setDescription(e.target.value)}>
         </textarea>
 
         <div className="row mb-3 ">
             <label htmlFor="r1" className="col-sm-2 col-form-label text-end">
                 Points </label>
             <div className="col-sm-10">
-                <input  className="form-control" placeholder = {assignment?.points} id="r1" style={{ maxWidth: '400px' }}  />
+                <input  className="form-control" value = {points} onChange={(e) => setPoints(e.target.value)} id="r1" style={{ maxWidth: '400px' }}  />
             </div> </div>
         
         <div className="row mb-3">
@@ -140,7 +162,8 @@ export default function AssignmentEditor() {
                 type="datetime"
                 id="wd-due-date"
                 className="form-control"
-                value={assignment?.due}
+                value={due}
+                onChange={(e) => setDue(e.target.value)}
               />
             </div>
 
@@ -153,7 +176,8 @@ export default function AssignmentEditor() {
                   type="datetime"
                   id="wd-available-from"
                   className="form-control"
-                  placeholder={assignment?.available}
+                  value={available}
+                  onChange={(e) => setAvailable(e.target.value)}
                 />
               </div>
               <div className="col-md-6">
@@ -164,7 +188,8 @@ export default function AssignmentEditor() {
                   type="datetime"
                   id="wd-until"
                   className="form-control"
-                  placeholder={assignment?.due}
+                  value = {due} 
+                  onChange={(e) => setDue(e.target.value)}
                 />
               </div>
             </div>
@@ -174,12 +199,11 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="d-flex justify-content-end">
-      <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
-        <button className="btn btn-secondary me-2">Cancel</button>
-      </Link>
-      <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
-        <button className="btn btn-danger">Save</button>
-      </Link>
+      
+        <button className="btn btn-secondary me-2" onClick={cancelEdit}>Cancel</button>
+        <ProtectedButton>
+        <button className="btn btn-danger" onClick={saveEdit}>Save</button>
+        </ProtectedButton>
       </div>
       </div>
   );}

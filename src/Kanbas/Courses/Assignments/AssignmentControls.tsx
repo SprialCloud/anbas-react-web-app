@@ -1,10 +1,16 @@
 import { FaPlus } from "react-icons/fa6";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-
+import ProtectedButton from "../../Account/ProtectedButton";
+import { useParams, useNavigate } from "react-router";
 export default function AssignmentControls() {
+    const { cid } = useParams();
+    const navigate = useNavigate();
+
     return (
+      
         <div id="wd-assignment-controls" className="text-nowrap">
-      <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-1 float-end">
+        <ProtectedButton>
+        <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-1 float-end" onClick={() => navigate(`/Kanbas/Courses/${cid}/Assignments/new`)} >
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Assignment</button>
         <button id="wd-add-group-btn" className="btn btn-lg btn-secondary me-1 float-end">
@@ -14,5 +20,7 @@ export default function AssignmentControls() {
         <FaMagnifyingGlass/>
         <input type="text" id="wd-search-assignments" className="border-0"  placeholder="  Search..." />
         </span>
+        </ProtectedButton>
         </div>
+        
     );}
