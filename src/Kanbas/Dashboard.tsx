@@ -119,6 +119,7 @@ export default function Dashboard({
           {showAllCourses ? "Show Enrolled Courses" : "Show All Course"}
         </button>
       )}
+      
       <h2 id="wd-dashboard-published">
         {showAllCourses
           ? "Published Courses (" + localCourses.length + ")"
@@ -127,7 +128,101 @@ export default function Dashboard({
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {localCourses.map((course: any) => (
+          {isFaculty
+            ? courses.map((course: any) => (
+                <div
+                  key={course._id}
+                  className="wd-dashboard-course col"
+                  style={{ width: "300px" }}
+                >
+                  <div className="card rounded-3 overflow-hidden">
+                    <ProtectedRoute>
+                      <Link
+                        className="wd-dashboard-course-link text-decoration-none text-dark"
+                        to={`/Kanbas/Courses/${course._id}`}
+                      >
+                        <img
+                          src={`/images/${course._id}.jpg`}
+                          width={280}
+                          height={160}
+                          alt=""
+                        />
+                        <div className="card-body">
+                          <span
+                            className="wd-dashboard-course-link"
+                            style={{
+                              textDecoration: "none",
+                              color: "navy",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {course.name}
+                          </span>
+                          <p
+                            className="wd-dashboard-course-title card-text"
+                            style={{ maxHeight: 53, overflow: "hidden" }}
+                          >
+                            {course.description}
+                          </p>
+                          <Link
+                            to={`/Kanbas/Courses/${course._id}`}
+                            className="btn btn-primary"
+                          >
+                            Go
+                          </Link>
+                          {isStudent &&
+                            (enrolledCourses.some((c) => c._id === course._id) ? (
+                              <button
+                                className="btn btn-danger float-end"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  handleUnenroll(course._id);
+                                }}
+                              >
+                                Unenroll
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-success float-end"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  handleEnroll(course._id);
+                                }}
+                              >
+                                Enroll
+                              </button>
+                            ))}
+                          {isFaculty && (
+                            <>
+                              <button
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  deleteCourse(course._id);
+                                }}
+                                className="btn btn-danger float-end"
+                                id="wd-delete-course-click"
+                              >
+                                Delete
+                              </button>
+                              <button
+                                id="wd-edit-course-click"
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  setCourse(course);
+                                }}
+                                className="btn btn-warning me-2 float-end"
+                              >
+                                Edit
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </Link>
+                    </ProtectedRoute>
+                  </div>
+                </div>
+              )) 
+          :localCourses.map((course: any) => (
             <div
               key={course._id}
               className="wd-dashboard-course col"
