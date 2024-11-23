@@ -1,8 +1,10 @@
 import {Link,  useParams, useNavigate} from "react-router-dom";
-import { addAssignment, editAssignment } from "./reducer";
+import { setAssignment,addAssignment, editAssignment } from "./reducer";
 import { useDispatch, useSelector} from "react-redux";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import ProtectedButton from "../../Account/ProtectedButton";
+import * as assignmentsClient from "./client";
+import * as coursesClient from "../client";
 export default function AssignmentEditor() {
     const {cid, aid} = useParams();
     const assignment = useSelector((state: any) => state.assignmentReducer.assignments.find((a: any) => a.course ===cid &&a._id === aid));
@@ -15,7 +17,7 @@ export default function AssignmentEditor() {
     const [due, setDue] = useState(assignment?.due || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16));
     const cancelEdit = () => navigate(`/Kanbas/Courses/${cid}/Assignments`);
 
-    const saveEdit = () => {
+    const saveEdit = async () => {
         const updatedAssignment = {
             _id: assignment?._id || new Date().getTime().toString(),
             course: cid,
@@ -25,9 +27,25 @@ export default function AssignmentEditor() {
             available,
             due,
         };
-        dispatch(assignment ? editAssignment(updatedAssignment) : addAssignment(updatedAssignment));
+        if (assignment) {
+          const result = await assignmentsClient.updateAssignment(aid as string, updatedAssignment);
+            dispatch(editAssignment(result));
+        } else {
+          const newAssignment = await coursesClient.createAssignmentForCourse(cid as string, updatedAssignment);
+            dispatch(addAssignment(updatedAssignment));
+        }
         cancelEdit();
     };
+
+    useEffect(() => {
+      if (assignment) {
+          setTitle(assignment.title || '');
+          setDescription(assignment.description || '');
+          setPoints(assignment.points || '');
+          setAvailable(assignment.available || '');
+          setDue(assignment.due || '');
+      }
+  }, [assignment]);
 
     return (
       <div id="wd-assignments-editor">

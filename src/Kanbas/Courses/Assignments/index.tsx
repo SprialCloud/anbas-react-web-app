@@ -8,11 +8,12 @@ import { LuNewspaper } from "react-icons/lu";
 import { FaTrash } from "react-icons/fa6";
 import "./style.css";
 import { Link, useParams} from "react-router-dom";
-import { deleteAssignment }
-  from "./reducer";
+import { deleteAssignment, setAssignment}from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import ProtectedButton from "../../Account/ProtectedButton";
-
+import { useState, useEffect } from "react";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -20,6 +21,19 @@ export default function Assignments() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssigmentsForCourse(cid as string);
+    dispatch(setAssignment(assignments));
+    };
+    useEffect(() => {
+    fetchAssignments();
+    }, []);
+    
+    const removeAssignment = async (assignmentId: string) => {
+      await assignmentsClient.deleteAssignment(assignmentId);
+      fetchAssignments();
+  }
+
     return (
       <div id="wd-assignments">
         <AssignmentControls/> <br/> <br/> <br/><br/>
@@ -35,7 +49,7 @@ export default function Assignments() {
           </div>
           </li>
           {assignments
-          .filter((assignment: any) => assignment.course === cid)
+          
           .map((assignment: any) => (
           <li className="wd-assignment-list-item d-flex align-items-center green-left-border">
             <div className="me-3">
@@ -63,7 +77,7 @@ export default function Assignments() {
                       className="btn btn-danger ms-2"
                       onClick={() => {
                         if (window.confirm("Are you sure you want to delete this assignment?")) {
-                          dispatch(deleteAssignment(assignment._id));
+                          removeAssignment(assignment._id);
                         }
                       }}
                     >
