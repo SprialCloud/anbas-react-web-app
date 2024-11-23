@@ -120,15 +120,14 @@ export default function Dashboard({
         </button>
       )}
       <h2 id="wd-dashboard-published">
-      
         {showAllCourses
-          ? "Published Courses (" + courses.length + ")"
-          : "Enrolled Courses (" + courses.length + ")"}
+          ? "Published Courses (" + localCourses.length + ")"
+          : "Enrolled Courses (" + localCourses.length + ")"}
       </h2>{" "}
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.map((course: any) => (
+          {localCourses.map((course: any) => (
             <div
               key={course._id}
               className="wd-dashboard-course col"
