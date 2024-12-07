@@ -39,13 +39,6 @@ export const createUser = async (user: any) => {
   return response.data;
   };
 
-export const createCourse = async (course: any) => {
-  const { data } = await axiosWithCredentials.post(
-    `${USERS_API}/current/courses`,
-    course
-  );
-  return data;
-};
 export const findMyCourses = async () => {
   const response = await axiosWithCredentials.get(
     `${USERS_API}/current/courses`

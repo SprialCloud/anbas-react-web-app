@@ -9,7 +9,6 @@ import "./style.css";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
 import * as courseClient from "./Courses/client";
-import * as userClient from "./Account/client";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -21,26 +20,25 @@ export default function Kanbas() {
 
 const fetchCourses = async () => {
 try {
-const courses = await userClient.findMyCourses();
+const courses = await courseClient.fetchAllCourses();
 setCourses(courses);
 } catch (error) {
 console.error(error);
 }
 };
 
-  const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
-    setCourses([ ...courses, newCourse ]);
-    fetchCourses();
-    };
+const addNewCourse = async () => {
+  const newCourse = await courseClient.createCourse(course);
+  setCourses([...courses, newCourse]);
+  };
+  
     
-    const deleteCourse = async (courseId: string) => {
-      const status = await courseClient.deleteCourse(courseId);
-      setCourses(courses.filter((course) => course._id !== courseId));
-      fetchCourses();
-      };
+const deleteCourse = async (courseId: string) => {
+  const status = await courseClient.deleteCourse(courseId);
+  setCourses(courses.filter((course) => course._id !== courseId));
+  };
       
-      const updateCourse = async () => {
+const updateCourse = async () => {
     await courseClient.updateCourse(course);
     setCourses(courses.map((c) => {
     if (c._id === course._id) { return course; }

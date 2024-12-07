@@ -32,7 +32,7 @@ export default function Dashboard({
   const handleEnroll = async (courseId: string) => {
     try {
       await enrollmentClient.enrollCourse(currentUser._id, courseId);
-      const updatedCourses = await accountClient.findMyCourses();
+      const updatedCourses = await courseClient.fetchAllCourses();
       setEnrolledCourses(updatedCourses);
       dispatch(enroll({ userId: currentUser._id, courseId }));
     } catch (error) {
@@ -43,7 +43,7 @@ export default function Dashboard({
   const handleUnenroll = async (courseId: string) => {
     try {
       await enrollmentClient.unenrollCourse(currentUser._id, courseId);
-      const updatedCourses = await accountClient.findMyCourses();
+      const updatedCourses = await courseClient.fetchAllCourses();
       setLocalCourses(updatedCourses);
       setEnrolledCourses(updatedCourses);
       dispatch(unenroll({ userId: currentUser._id, courseId }));
@@ -64,7 +64,7 @@ export default function Dashboard({
 
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
-      const courses = await accountClient.findMyCourses();
+      const courses = await courseClient.fetchAllCourses();
       setEnrolledCourses(courses);
       setLocalCourses(courses);
     };
